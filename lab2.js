@@ -83,10 +83,11 @@ canvas.addEventListener('click', function (e) {
 				ctx.lineTo(points[points.length - 1].x, Math.abs(points[points.length - 1].y - 800));
 				ctx.stroke();
 
+				checkConvex(points);
+				checkSelfIntersection(points);
+
 				return ;
 			}
-
-			points.forEach(point => console.log("(" + point.x + ", " + point.y + ")"));
 
 			ctx.beginPath();
 			ctx.strokeStyle = "red";
@@ -94,15 +95,46 @@ canvas.addEventListener('click', function (e) {
 			ctx.lineTo(e.offsetX, e.offsetY);
 			ctx.stroke();
 
+			drawPoint(e.offsetX, e.offsetY);
+
 			previousPoint.x = e.offsetX;
 			previousPoint.y = e.offsetY;
 
 			counter++;
-
-			document.getElementById("point_A").innerHTML = "(" + e.offsetX / 50 + "; " + getY(e.offsetY) / 50  + ")";
         }
 	}
 });
+
+
+function checkConvex(points){
+	if (!allowed){
+		let length = points.length
+
+		for (let i = 0; i < points.length; i++){
+			if (pseuDotProduct(points[i], points[(i + 1) % length], points[(i + 2) % length]) *
+				pseuDotProduct(points[(i + 1) % length], points[(i + 2) % length], points[(i + 3) % length]) < 0){
+				return document.querySelector(".convex").innerHTML = "Не выпуклый";
+			}
+		}
+
+		return (pseuDotProduct(points[0], points[1], points[2]) < 0) ? document.querySelector(".convex").innerHTML = "Выпуклый(по часовой)" :
+			document.querySelector(".convex").innerHTML = "Выпуклый(против часовой)";
+	}
+}
+
+function checkSelfIntersection(points){
+	let length = points.length;
+	for (let i = 0; i < points.length - 1; i++){
+		for (let j = i + 2; j < points.length; j++){
+			if (pseuDotProduct(points[(j + 1) % length], points[j], points[i]) * pseuDotProduct(points[(j + 1) % length], points[j], points[i + 1]) < 0 &&
+				pseuDotProduct(points[i + 1], points[i], points[j]) * pseuDotProduct(points[i + 1], points[i], points[(j + 1) % length]) < 0){
+				return document.querySelector(".SelfIntersection").innerHTML = "Есть";
+			}
+		}
+	}
+
+	return document.querySelector(".SelfIntersection").innerHTML = "Нет";
+}
 
 function check(firstPoint, lastPoint){
 	return (Math.pow(lastPoint.x - firstPoint.x, 2) + Math.pow(lastPoint.y - firstPoint.y, 2)) <= 400;
@@ -118,4 +150,16 @@ function drawPoint(x, y){
 	point.lineWidth = 1;
 	point.strokeStyle = 'red';
 	point.stroke();
+}
+
+function pseuDotProduct(firstPoint, middlePoint, lastPoint){
+	console.log("(" + firstPoint.x + ", " + firstPoint.y + "); (" + lastPoint.x + ", " + lastPoint.y + ")");
+	console.log(firstPoint.x * lastPoint.y - lastPoint.x * firstPoint.y);
+
+	const x1 = lastPoint.x - middlePoint.x;
+	const x2 = firstPoint.x - middlePoint.x;
+	const y1 = lastPoint.y - middlePoint.y;
+	const y2 = firstPoint.y - middlePoint.y;
+
+	return x1 * y2 - x2 * y1;
 }
