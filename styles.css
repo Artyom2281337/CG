@@ -1,0 +1,61 @@
+/*@import "~normalize.css";*/
+/*@import "roboto.css";*/
+
+#pic1{
+  width: 1200px;
+  height: 800px;
+  display: block;
+  margin: 50px 0 0 50px;
+}
+
+#OX {
+display: flex;
+text-align: env();
+width: 1200px;
+}
+#OX li {
+display: inline;
+font-size: 18px;
+text-align: center;
+position: relative;
+width: 50px;
+position: relative;
+display: -webkit-inline-flex;
+}
+#OY{
+  padding-left: 20px; 
+  position: absolute;
+  top: 75px;
+  }
+#OY li{
+  list-style-type: none;
+  font-size: 18px;
+  margin-bottom: 30px; 
+} 
+
+#menu{
+  position: absolute;
+  top:200px;
+  right: 500px;
+}
+
+#point1x{
+  display: inline;
+}
+#point1y{
+  display: inline;
+}
+#point2x{
+  display: inline;
+}
+#point2y{
+  display: inline;
+}
+#point3x{
+  display: inline;
+}
+#point3y{
+  display: inline;
+}
+
+
